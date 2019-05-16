@@ -35,62 +35,66 @@ function Memory() {
             src: 'strzalka_prawo.png'
         }
     ];
-
     const POSITION = shuffle(PAIRS);
-    console.log('pozycja', POSITION);
+    const MAX_TILES = 2;
 
     let board = document.querySelector('.board')
-
-    displayBoard();
-
     let tileCounter = 0;
-    const MAX_TILES = 2;
-    //2; i jedno klikniecie ktore resetuje to na 0
+    
+    displayBoard();
+    board.addEventListener('click', clickTheBoard);
 
-    board.addEventListener('click', function (event) {
-
-        if (event.target.classList.contains('tile--hidden')) {
-            if (tileCounter < 2) {
-                //odkrywanie kafelka
-
-                console.log('target', event.target);
-                event.target.classList.remove('tile--hidden');
-                event.target.classList.add('tile--shown');
-
-                let img = event.target.querySelector('img');
-                img.style.visibility = "visible";
-
-                tileCounter++;
-                if (tileCounter === 2) {
-                    let shownTiles = getShownTiles();
-                    let images = shownTiles.map(tile => tile.querySelector('img').src);
-                    if (images[0] === images[1]) {
-                        //usuwamy z planszy
-                        shownTiles.map(tile => {
-                            tile.classList.remove('tile--shown');
-                            tile.classList.add('tile--found');
-                        });
-                        resetCounter();
-                    }
-
-                }
-
+    function clickTheBoard(event) {
+        if (isTileHidden(event)) {
+            let shownTiles = getShownTiles();
+            if (tileCounter === MAX_TILES && areImagesSame(shownTiles)) {
+                pairIsFound(shownTiles);
+            }
+            if (tileCounter < MAX_TILES) {
+                showTile(event.target);
             } else {
-                let shownTiles = getShownTiles();
-                let images = shownTiles.map(tile => tile.querySelector('img').src);
-
-                //porownywanie dwoch kafelkow
-                {
-                    shownTiles.map(tile => {
-                        tile.classList.remove('tile--shown');
-                        tile.classList.add('tile--hidden');
-                        tile.querySelector('img').style.visibility = "hidden";
-                    })
-                }
-                resetCounter();
+                pairIsNotFound(shownTiles);
             }
         }
-    })
+    }
+
+    function showTile(target) {
+        target.classList.remove('tile--hidden');
+        target.classList.add('tile--shown');
+
+        let img = target.querySelector('img');
+        img.style.visibility = "visible";
+        tileCounter++;
+    }
+
+    function pairIsFound(shownTiles) {
+        shownTiles.map(tile => {
+            tile.classList.remove('tile--shown');
+            tile.classList.add('tile--found');
+        });
+        resetCounter();
+    }
+
+    function pairIsNotFound(shownTiles) {
+        shownTiles.map(tile => {
+            tile.classList.remove('tile--shown');
+            tile.classList.add('tile--hidden');
+            tile.querySelector('img').style.visibility = "hidden";
+        })
+        resetCounter();
+    }
+
+    function isTileHidden(event) {
+        return event.target.classList.contains('tile--hidden');
+    }
+
+    function areImagesSame(shownTiles) {
+        let images = shownTiles.map(tile => tile.querySelector('img').src);
+        if (images[0] === images[1]) {
+            return true;
+        }
+        return false;
+    }
 
     function getShownTiles() {
         return Array.from(document.querySelectorAll('.tile--shown'));
