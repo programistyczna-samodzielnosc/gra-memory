@@ -1,5 +1,6 @@
 function Memory() {
     const NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7];
+    const PAIRS = [...NUMBERS,...NUMBERS]
     const IMAGES = [
         {
             name: 'chmurka',
@@ -35,15 +36,15 @@ function Memory() {
         }
     ];
 
-    const FINAL_NUMBERS = shuffle(NUMBERS);
-    console.log('blblele', FINAL_NUMBERS);
+    const POSITION = shuffle(PAIRS);
+    console.log('blblele', POSITION);
 
     let board = document.querySelector('.board')
 
     displayBoard();
 
     function displayBoard() {
-        let html = FINAL_NUMBERS.map((number)=>{
+        let html = POSITION.map((number)=>{
             return htmlImage(IMAGES[number])
         }).join('');
         board.innerHTML = html;
