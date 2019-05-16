@@ -4,7 +4,6 @@
     padding:0;
 }
 
-
 .board {
     display:flex;
     flex-wrap: wrap;
@@ -32,4 +31,13 @@
 }
 .tile--hidden img {
     visibility: hidden;
+}
+
+.info {
+    display:flex;
+    justify-content: space-around;
+}
+
+.info>div {
+    padding:10px;
 }
