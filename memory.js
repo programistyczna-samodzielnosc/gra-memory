@@ -43,6 +43,16 @@ function Memory() {
 
     displayBoard();
 
+    board.addEventListener('click', function(event){
+        
+        if(event.target.classList.contains('tile')) {
+            console.log('target',event.target);
+           
+            let img = event.target.querySelector('img');
+            img.style.visibility = "visible";
+        }
+    })
+
     function displayBoard() {
         let html = POSITION.map((number)=>{
             return htmlImage(IMAGES[number])
@@ -52,7 +62,7 @@ function Memory() {
 
     function htmlImage(image) {
         return `
-            <div class="image image--${image.name}">
+            <div class="tile tile--hidden tile--${image.name}">
                 <img src="memory/${image.src}">
             </div>
         `
