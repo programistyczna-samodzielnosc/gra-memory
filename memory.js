@@ -52,31 +52,35 @@ function Memory() {
         if (event.target.classList.contains('tile--hidden')) {
             if (tileCounter < 2) {
                 //odkrywanie kafelka
-               
+
                 console.log('target', event.target);
                 event.target.classList.remove('tile--hidden');
                 event.target.classList.add('tile--shown');
 
                 let img = event.target.querySelector('img');
                 img.style.visibility = "visible";
-                
+
                 tileCounter++;
-                // if(tileCounter === 2) {
-                //     resetCounter();
-                // }
-                
+                if (tileCounter === 2) {
+                    let shownTiles = getShownTiles();
+                    let images = shownTiles.map(tile => tile.querySelector('img').src);
+                    if (images[0] === images[1]) {
+                        //usuwamy z planszy
+                        shownTiles.map(tile => {
+                            tile.classList.remove('tile--shown');
+                            tile.classList.add('tile--found');
+                        });
+                        resetCounter();
+                    }
+
+                }
+
             } else {
-                let shownTiles = Array.from(document.querySelectorAll('.tile--shown'));
+                let shownTiles = getShownTiles();
                 let images = shownTiles.map(tile => tile.querySelector('img').src);
 
                 //porownywanie dwoch kafelkow
-                if (images[0] === images[1]) {
-                    //usuwamy z planszy
-                    shownTiles.map(tile => {
-                        tile.classList.remove('tile--shown');
-                        tile.classList.add('tile--found');
-                    });
-                } else {
+                {
                     shownTiles.map(tile => {
                         tile.classList.remove('tile--shown');
                         tile.classList.add('tile--hidden');
@@ -87,6 +91,10 @@ function Memory() {
             }
         }
     })
+
+    function getShownTiles() {
+        return Array.from(document.querySelectorAll('.tile--shown'));
+    }
 
     function resetCounter() {
         tileCounter = 0;
